@@ -24,7 +24,7 @@ namespace PlanChecker
             //You can use the following to load a context (for debugging purposes)
             //args = ContextIO.ReadArgsFromFile(@"..\Desktop\context.txt");
             //Might disable (uncomment) for plugin mode
-            bs.IsPatientSelectionEnabled = true;
+            bs.IsPatientSelectionEnabled = truee;
             bs.Run(args);
         }
     }
