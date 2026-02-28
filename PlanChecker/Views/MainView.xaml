@@ -1,4 +1,4 @@
-﻿<Window x:Class="PlanChecker.Views.MainView"
+<Window x:Class="PlanChecker.Views.MainView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,68 +7,138 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:local="clr-namespace:PlanChecker.Views"
         mc:Ignorable="d"
-        Title="MainView" Height="300" Width="300" Icon="../Resources/esapix.png">
-    <Grid>
-        <!--EXAMPLE DATA BIND-->
-        <Grid Width="400" Margin="10">
+        Title="Plan Checker - DVH Summary" Height="620" Width="740"
+        Icon="../Resources/esapix.png">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Plan Details -->
+        <Grid Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Loaded Plan Details"
                        Grid.ColumnSpan="2"
-                       HorizontalAlignment="Stretch"
-                       Background="Black"
-                       Foreground="White"
-                       TextAlignment="Center"/>
-            <!--PLAN ID-->
-            <TextBlock Text="Plan Id"
-                       Grid.Row="1"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
-            <TextBlock Text="{Binding Path=Id}"
-                       Grid.Row="1"
-                       Grid.Column="1"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
-            <!--Number of Beams-->
-            <TextBlock Text="Number of Beams"
-                       Grid.Row="2"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
-            <TextBlock Text="{Binding Path=NBeams}"
-                       Grid.Row="2"
-                       Grid.Column="1"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
-            <!--UID-->
-            <TextBlock Text="SOP Instance UID"
-                       Grid.Row="3"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
-            <TextBlock Text="{Binding Path=UID}"
-                       Grid.Row="3"
-                       Grid.Column="1"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
-            <!--IsDoseCalculated-->
-            <TextBlock Text="Is Dose Calculated?"
-                       Grid.Row="4"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
-            <TextBlock Text="{Binding Path=IsDoseCalculated}"
-                       Grid.Row="4"
-                       Grid.Column="1"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"/>
+                       Background="Black" Foreground="White"
+                       FontWeight="Bold" TextAlignment="Center" Padding="0,3"/>
+            <TextBlock Text="Plan Id" Grid.Row="1" Padding="5,3"/>
+            <TextBlock Text="{Binding Id}" Grid.Row="1" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
+            <TextBlock Text="Number of Beams" Grid.Row="2" Padding="5,3"/>
+            <TextBlock Text="{Binding NBeams}" Grid.Row="2" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
+            <TextBlock Text="SOP Instance UID" Grid.Row="3" Padding="5,3"/>
+            <TextBlock Text="{Binding UID}" Grid.Row="3" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
+            <TextBlock Text="Is Dose Calculated?" Grid.Row="4" Padding="5,3"/>
+            <TextBlock Text="{Binding IsDoseCalculated}" Grid.Row="4" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
         </Grid>
+
+        <!-- DVH Table Header -->
+        <TextBlock Grid.Row="1"
+                   Text="DVH Summary Table"
+                   Background="DarkSlateGray" Foreground="White"
+                   FontWeight="Bold" Padding="5,5"
+                   Margin="0,8,0,0"/>
+
+        <!-- Color Legend -->
+        <WrapPanel Grid.Row="2" Orientation="Horizontal" Margin="0,4,0,4">
+            <Border Width="14" Height="14" Background="#C62828" Margin="0,1,3,0"/>
+            <TextBlock Text="GTV" Margin="0,0,12,0" FontSize="11"/>
+            <Border Width="14" Height="14" Background="#E65100" Margin="0,1,3,0"/>
+            <TextBlock Text="CTV" Margin="0,0,12,0" FontSize="11"/>
+            <Border Width="14" Height="14" Background="#F9A825" Margin="0,1,3,0"/>
+            <TextBlock Text="PTV" Margin="0,0,12,0" FontSize="11"/>
+            <Border Width="14" Height="14" Background="#ADD8E6" Margin="0,1,3,0"/>
+            <TextBlock Text="ORGAN" Margin="0,0,12,0" FontSize="11"/>
+            <Border Width="14" Height="14" Background="#C5E1A5" Margin="0,1,3,0"/>
+            <TextBlock Text="AVOIDANCE" Margin="0,0,12,0" FontSize="11"/>
+            <Border Width="14" Height="14" Background="#E0E0E0" Margin="0,1,3,0"/>
+            <TextBlock Text="EXTERNAL" Margin="0,0,12,0" FontSize="11"/>
+        </WrapPanel>
+
+        <!-- DVH Color-Coded DataGrid -->
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding DvhRows}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  RowHeaderWidth="0"
+                  SelectionMode="Single"
+                  BorderBrush="DarkSlateGray" BorderThickness="1">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding RowBackground}"/>
+                    <Setter Property="Foreground" Value="{Binding RowForeground}"/>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="DarkSlateGray"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="6,4"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Structure"   Binding="{Binding StructureId}" Width="130"/>
+                <DataGridTextColumn Header="Type"        Binding="{Binding DicomType}"   Width="80"/>
+                <DataGridTextColumn Header="Vol (cc)"   Binding="{Binding Volume}"       Width="75">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Setter Property="Padding" Value="0,0,6,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Dmin (Gy)"  Binding="{Binding MinDose}"      Width="80">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Setter Property="Padding" Value="0,0,6,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Dmean (Gy)" Binding="{Binding MeanDose}"     Width="85">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Setter Property="Padding" Value="0,0,6,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Dmax (Gy)"  Binding="{Binding MaxDose}"      Width="85">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Setter Property="Padding" Value="0,0,6,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="D95 (Gy)"   Binding="{Binding D95}"          Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Setter Property="Padding" Value="0,0,6,0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
