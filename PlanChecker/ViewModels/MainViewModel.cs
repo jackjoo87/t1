@@ -62,6 +62,21 @@ namespace PlanChecker.ViewModels
             set => SetProperty(ref energyMode, value);
         }
 
+        // Empty string → keep the plan's configured model (no override)
+        private string optimizerModelId = string.Empty;
+        public string OptimizerModelId
+        {
+            get => optimizerModelId;
+            set => SetProperty(ref optimizerModelId, value);
+        }
+
+        private string doseCalcModelId = string.Empty;
+        public string DoseCalcModelId
+        {
+            get => doseCalcModelId;
+            set => SetProperty(ref doseCalcModelId, value);
+        }
+
         // ── Auto-plan: state and log ─────────────────────────────────────
         private bool isAutoPlanning;
         public bool IsAutoPlanning
@@ -224,6 +239,8 @@ namespace PlanChecker.ViewModels
                             Fractions,
                             MachineName,
                             EnergyMode,
+                            OptimizerModelId,
+                            DoseCalcModelId,
                             AppendLog);
                     });
                 }

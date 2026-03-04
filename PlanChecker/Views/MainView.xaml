@@ -205,6 +205,8 @@
                                 <RowDefinition Height="32"/>
                                 <RowDefinition Height="32"/>
                                 <RowDefinition Height="32"/>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="32"/>
                                 <RowDefinition Height="44"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -274,8 +276,32 @@
                                        Foreground="Gray" FontSize="10"
                                        VerticalAlignment="Center" Margin="8,0"/>
 
+                            <!-- Optimiser Model (optional) -->
+                            <TextBlock Grid.Row="5" Grid.Column="0"
+                                       Text="Optimiser Model ID:"
+                                       Style="{StaticResource Label}"/>
+                            <TextBox   Grid.Row="5" Grid.Column="1"
+                                       Text="{Binding OptimizerModelId, UpdateSourceTrigger=PropertyChanged}"
+                                       VerticalAlignment="Center" Padding="4,2"/>
+                            <TextBlock Grid.Row="5" Grid.Column="2"
+                                       Text="e.g. PO 16.1.06  (blank = keep plan default)"
+                                       Foreground="Gray" FontSize="10"
+                                       VerticalAlignment="Center" Margin="8,0"/>
+
+                            <!-- Dose-Calc Model (optional) -->
+                            <TextBlock Grid.Row="6" Grid.Column="0"
+                                       Text="Dose-Calc Model ID:"
+                                       Style="{StaticResource Label}"/>
+                            <TextBox   Grid.Row="6" Grid.Column="1"
+                                       Text="{Binding DoseCalcModelId, UpdateSourceTrigger=PropertyChanged}"
+                                       VerticalAlignment="Center" Padding="4,2"/>
+                            <TextBlock Grid.Row="6" Grid.Column="2"
+                                       Text="e.g. AAA 16.1.06  (blank = keep plan default)"
+                                       Foreground="Gray" FontSize="10"
+                                       VerticalAlignment="Center" Margin="8,0"/>
+
                             <!-- Run Button -->
-                            <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                            <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
                                     Command="{Binding RunAutoPlanCommand}"
                                     HorizontalAlignment="Stretch">
                                 <Button.Style>
