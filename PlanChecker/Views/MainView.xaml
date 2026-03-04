@@ -7,138 +7,320 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:local="clr-namespace:PlanChecker.Views"
         mc:Ignorable="d"
-        Title="Plan Checker - DVH Summary" Height="620" Width="740"
+        Title="Plan Checker — Varian Eclipse" Height="680" Width="780"
         Icon="../Resources/esapix.png">
-    <Grid Margin="10">
+
+    <Window.Resources>
+        <!-- Shared header style used on both tabs -->
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="Background"   Value="DarkSlateGray"/>
+            <Setter Property="Foreground"   Value="White"/>
+            <Setter Property="FontWeight"   Value="Bold"/>
+            <Setter Property="Padding"      Value="6,5"/>
+            <Setter Property="Margin"       Value="0,6,0,0"/>
+        </Style>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding"           Value="0,0,8,0"/>
+        </Style>
+        <Style x:Key="RunButton" TargetType="Button">
+            <Setter Property="Background"  Value="DarkSlateGray"/>
+            <Setter Property="Foreground"  Value="White"/>
+            <Setter Property="FontWeight"  Value="Bold"/>
+            <Setter Property="FontSize"    Value="13"/>
+            <Setter Property="Padding"     Value="18,6"/>
+            <Setter Property="Margin"      Value="0,10,0,0"/>
+            <Setter Property="Cursor"      Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="8">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>   <!-- Plan info header -->
+            <RowDefinition Height="*"/>      <!-- TabControl       -->
         </Grid.RowDefinitions>
 
-        <!-- Plan Details -->
-        <Grid Grid.Row="0">
+        <!-- ═══ Plan Info ═══════════════════════════════════════════════ -->
+        <Grid Grid.Row="0" Margin="0,0,0,6">
             <Grid.RowDefinitions>
-                <RowDefinition Height="24"/>
-                <RowDefinition Height="24"/>
-                <RowDefinition Height="24"/>
-                <RowDefinition Height="24"/>
-                <RowDefinition Height="24"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="22"/>
+                <RowDefinition Height="22"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="180"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <TextBlock Text="Loaded Plan Details"
                        Grid.ColumnSpan="2"
                        Background="Black" Foreground="White"
-                       FontWeight="Bold" TextAlignment="Center" Padding="0,3"/>
-            <TextBlock Text="Plan Id" Grid.Row="1" Padding="5,3"/>
-            <TextBlock Text="{Binding Id}" Grid.Row="1" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
-            <TextBlock Text="Number of Beams" Grid.Row="2" Padding="5,3"/>
-            <TextBlock Text="{Binding NBeams}" Grid.Row="2" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
-            <TextBlock Text="SOP Instance UID" Grid.Row="3" Padding="5,3"/>
-            <TextBlock Text="{Binding UID}" Grid.Row="3" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
-            <TextBlock Text="Is Dose Calculated?" Grid.Row="4" Padding="5,3"/>
-            <TextBlock Text="{Binding IsDoseCalculated}" Grid.Row="4" Grid.Column="1" FontWeight="Bold" Padding="5,3"/>
+                       FontWeight="Bold" TextAlignment="Center" Padding="0,2"/>
+
+            <TextBlock Text="Plan ID"             Grid.Row="1" Padding="5,2"/>
+            <TextBlock Text="{Binding Id}"        Grid.Row="1" Grid.Column="1"
+                       FontWeight="Bold" Padding="5,2"/>
+
+            <TextBlock Text="Number of Beams"     Grid.Row="2" Padding="5,2"/>
+            <TextBlock Text="{Binding NBeams}"    Grid.Row="2" Grid.Column="1"
+                       FontWeight="Bold" Padding="5,2"/>
+
+            <TextBlock Text="SOP Instance UID"    Grid.Row="3" Padding="5,2"/>
+            <TextBlock Text="{Binding UID}"       Grid.Row="3" Grid.Column="1"
+                       FontWeight="Bold" Padding="5,2" FontSize="10"/>
+
+            <TextBlock Text="Is Dose Calculated?" Grid.Row="4" Padding="5,2"/>
+            <TextBlock Text="{Binding IsDoseCalculated}" Grid.Row="4" Grid.Column="1"
+                       FontWeight="Bold" Padding="5,2"/>
         </Grid>
 
-        <!-- DVH Table Header -->
-        <TextBlock Grid.Row="1"
-                   Text="DVH Summary Table"
-                   Background="DarkSlateGray" Foreground="White"
-                   FontWeight="Bold" Padding="5,5"
-                   Margin="0,8,0,0"/>
+        <!-- ═══ TabControl ══════════════════════════════════════════════ -->
+        <TabControl Grid.Row="1">
 
-        <!-- Color Legend -->
-        <WrapPanel Grid.Row="2" Orientation="Horizontal" Margin="0,4,0,4">
-            <Border Width="14" Height="14" Background="#C62828" Margin="0,1,3,0"/>
-            <TextBlock Text="GTV" Margin="0,0,12,0" FontSize="11"/>
-            <Border Width="14" Height="14" Background="#E65100" Margin="0,1,3,0"/>
-            <TextBlock Text="CTV" Margin="0,0,12,0" FontSize="11"/>
-            <Border Width="14" Height="14" Background="#F9A825" Margin="0,1,3,0"/>
-            <TextBlock Text="PTV" Margin="0,0,12,0" FontSize="11"/>
-            <Border Width="14" Height="14" Background="#ADD8E6" Margin="0,1,3,0"/>
-            <TextBlock Text="ORGAN" Margin="0,0,12,0" FontSize="11"/>
-            <Border Width="14" Height="14" Background="#C5E1A5" Margin="0,1,3,0"/>
-            <TextBlock Text="AVOIDANCE" Margin="0,0,12,0" FontSize="11"/>
-            <Border Width="14" Height="14" Background="#E0E0E0" Margin="0,1,3,0"/>
-            <TextBlock Text="EXTERNAL" Margin="0,0,12,0" FontSize="11"/>
-        </WrapPanel>
+            <!-- ─── Tab 1: DVH Summary ──────────────────────────────── -->
+            <TabItem Header="  DVH Summary  ">
+                <Grid Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>  <!-- header label  -->
+                        <RowDefinition Height="Auto"/>  <!-- legend        -->
+                        <RowDefinition Height="*"/>     <!-- data grid     -->
+                    </Grid.RowDefinitions>
 
-        <!-- DVH Color-Coded DataGrid -->
-        <DataGrid Grid.Row="3"
-                  ItemsSource="{Binding DvhRows}"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserSortColumns="True"
-                  CanUserResizeColumns="True"
-                  GridLinesVisibility="Horizontal"
-                  HeadersVisibility="Column"
-                  RowHeaderWidth="0"
-                  SelectionMode="Single"
-                  BorderBrush="DarkSlateGray" BorderThickness="1">
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Setter Property="Background" Value="{Binding RowBackground}"/>
-                    <Setter Property="Foreground" Value="{Binding RowForeground}"/>
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="DarkSlateGray"/>
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="Padding" Value="6,4"/>
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="0,0,1,0"/>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Structure"   Binding="{Binding StructureId}" Width="130"/>
-                <DataGridTextColumn Header="Type"        Binding="{Binding DicomType}"   Width="80"/>
-                <DataGridTextColumn Header="Vol (cc)"   Binding="{Binding Volume}"       Width="75">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextAlignment" Value="Right"/>
-                            <Setter Property="Padding" Value="0,0,6,0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Dmin (Gy)"  Binding="{Binding MinDose}"      Width="80">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextAlignment" Value="Right"/>
-                            <Setter Property="Padding" Value="0,0,6,0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Dmean (Gy)" Binding="{Binding MeanDose}"     Width="85">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextAlignment" Value="Right"/>
-                            <Setter Property="Padding" Value="0,0,6,0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Dmax (Gy)"  Binding="{Binding MaxDose}"      Width="85">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextAlignment" Value="Right"/>
-                            <Setter Property="Padding" Value="0,0,6,0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="D95 (Gy)"   Binding="{Binding D95}"          Width="*">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextAlignment" Value="Right"/>
-                            <Setter Property="Padding" Value="0,0,6,0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <TextBlock Grid.Row="0"
+                               Text="DVH Summary Table"
+                               Style="{StaticResource SectionHeader}"/>
+
+                    <!-- Color legend -->
+                    <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,4">
+                        <Border Width="13" Height="13" Background="#C62828" Margin="0,1,3,0"/>
+                        <TextBlock Text="GTV"       Margin="0,0,12,0" FontSize="11"/>
+                        <Border Width="13" Height="13" Background="#E65100" Margin="0,1,3,0"/>
+                        <TextBlock Text="CTV"       Margin="0,0,12,0" FontSize="11"/>
+                        <Border Width="13" Height="13" Background="#F9A825" Margin="0,1,3,0"/>
+                        <TextBlock Text="PTV"       Margin="0,0,12,0" FontSize="11"/>
+                        <Border Width="13" Height="13" Background="#ADD8E6" Margin="0,1,3,0"/>
+                        <TextBlock Text="ORGAN"     Margin="0,0,12,0" FontSize="11"/>
+                        <Border Width="13" Height="13" Background="#C5E1A5" Margin="0,1,3,0"/>
+                        <TextBlock Text="AVOIDANCE" Margin="0,0,12,0" FontSize="11"/>
+                        <Border Width="13" Height="13" Background="#E0E0E0" Margin="0,1,3,0"/>
+                        <TextBlock Text="EXTERNAL"  Margin="0,0,12,0" FontSize="11"/>
+                    </WrapPanel>
+
+                    <!-- DVH DataGrid -->
+                    <DataGrid Grid.Row="2"
+                              ItemsSource="{Binding DvhRows}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              RowHeaderWidth="0"
+                              SelectionMode="Single"
+                              BorderBrush="DarkSlateGray" BorderThickness="1">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="{Binding RowBackground}"/>
+                                <Setter Property="Foreground" Value="{Binding RowForeground}"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background"       Value="DarkSlateGray"/>
+                                <Setter Property="Foreground"       Value="White"/>
+                                <Setter Property="FontWeight"       Value="Bold"/>
+                                <Setter Property="Padding"          Value="6,4"/>
+                                <Setter Property="BorderBrush"      Value="Gray"/>
+                                <Setter Property="BorderThickness"  Value="0,0,1,0"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Structure"   Binding="{Binding StructureId}" Width="130"/>
+                            <DataGridTextColumn Header="Type"        Binding="{Binding DicomType}"   Width="80"/>
+                            <DataGridTextColumn Header="Vol (cc)"    Binding="{Binding Volume}"      Width="75">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                        <Setter Property="Padding"       Value="0,0,6,0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Dmin (Gy)"  Binding="{Binding MinDose}"     Width="80">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                        <Setter Property="Padding"       Value="0,0,6,0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Dmean (Gy)" Binding="{Binding MeanDose}"    Width="85">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                        <Setter Property="Padding"       Value="0,0,6,0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Dmax (Gy)"  Binding="{Binding MaxDose}"     Width="85">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                        <Setter Property="Padding"       Value="0,0,6,0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="D95 (Gy)"   Binding="{Binding D95}"         Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                        <Setter Property="Padding"       Value="0,0,6,0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- ─── Tab 2: VMAT Auto-Planning ───────────────────────── -->
+            <TabItem Header="  VMAT Auto-Planning  ">
+                <Grid Margin="6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>   <!-- settings group -->
+                        <RowDefinition Height="Auto"/>   <!-- arc summary     -->
+                        <RowDefinition Height="*"/>      <!-- log             -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Settings GroupBox -->
+                    <GroupBox Grid.Row="0"
+                              Header=" Plan Parameters "
+                              BorderBrush="DarkSlateGray" BorderThickness="1"
+                              Padding="8,6">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="32"/>
+                                <RowDefinition Height="44"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Target Structure -->
+                            <TextBlock Grid.Row="0" Grid.Column="0"
+                                       Text="Target Structure:"
+                                       Style="{StaticResource Label}"/>
+                            <ComboBox  Grid.Row="0" Grid.Column="1"
+                                       ItemsSource="{Binding TargetStructures}"
+                                       SelectedItem="{Binding SelectedTargetId}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2"
+                                       Text="GTV / CTV / PTV from structure set"
+                                       Foreground="Gray" FontSize="10"
+                                       VerticalAlignment="Center" Margin="8,0"/>
+
+                            <!-- Prescription Dose -->
+                            <TextBlock Grid.Row="1" Grid.Column="0"
+                                       Text="Prescription Dose (Gy):"
+                                       Style="{StaticResource Label}"/>
+                            <TextBox   Grid.Row="1" Grid.Column="1"
+                                       Text="{Binding PrescriptionGy, UpdateSourceTrigger=PropertyChanged}"
+                                       VerticalAlignment="Center" Padding="4,2"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2"
+                                       Text="Total dose in Gray"
+                                       Foreground="Gray" FontSize="10"
+                                       VerticalAlignment="Center" Margin="8,0"/>
+
+                            <!-- Fractions -->
+                            <TextBlock Grid.Row="2" Grid.Column="0"
+                                       Text="Number of Fractions:"
+                                       Style="{StaticResource Label}"/>
+                            <TextBox   Grid.Row="2" Grid.Column="1"
+                                       Text="{Binding Fractions, UpdateSourceTrigger=PropertyChanged}"
+                                       VerticalAlignment="Center" Padding="4,2"/>
+                            <TextBlock Grid.Row="2" Grid.Column="2"
+                                       Text="Dose/fx = Rx ÷ fractions"
+                                       Foreground="Gray" FontSize="10"
+                                       VerticalAlignment="Center" Margin="8,0"/>
+
+                            <!-- Machine Name -->
+                            <TextBlock Grid.Row="3" Grid.Column="0"
+                                       Text="Machine Name:"
+                                       Style="{StaticResource Label}"/>
+                            <TextBox   Grid.Row="3" Grid.Column="1"
+                                       Text="{Binding MachineName, UpdateSourceTrigger=PropertyChanged}"
+                                       VerticalAlignment="Center" Padding="4,2"/>
+                            <TextBlock Grid.Row="3" Grid.Column="2"
+                                       Text="Eclipse machine ID (e.g. TrueBeam1)"
+                                       Foreground="Gray" FontSize="10"
+                                       VerticalAlignment="Center" Margin="8,0"/>
+
+                            <!-- Energy Mode -->
+                            <TextBlock Grid.Row="4" Grid.Column="0"
+                                       Text="Energy Mode:"
+                                       Style="{StaticResource Label}"/>
+                            <TextBox   Grid.Row="4" Grid.Column="1"
+                                       Text="{Binding EnergyMode, UpdateSourceTrigger=PropertyChanged}"
+                                       VerticalAlignment="Center" Padding="4,2"/>
+                            <TextBlock Grid.Row="4" Grid.Column="2"
+                                       Text="e.g. 6X, 10X, 6XFFF"
+                                       Foreground="Gray" FontSize="10"
+                                       VerticalAlignment="Center" Margin="8,0"/>
+
+                            <!-- Run Button -->
+                            <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                                    Command="{Binding RunAutoPlanCommand}"
+                                    HorizontalAlignment="Stretch">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource RunButton}">
+                                        <Setter Property="Content" Value="Run VMAT Auto-Plan"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsAutoPlanning}" Value="True">
+                                                <Setter Property="Content"    Value="Running optimisation…"/>
+                                                <Setter Property="IsEnabled"  Value="False"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Arc configuration summary (read-only info) -->
+                    <Border Grid.Row="1"
+                            Background="#F5F5F5" BorderBrush="LightGray"
+                            BorderThickness="1" Padding="8,5" Margin="0,6,0,0">
+                        <TextBlock FontSize="11" Foreground="#444">
+                            <Run FontWeight="Bold">Arc geometry (fixed): </Run>
+                            <Run>Arc 1 — CCW, collimator 30°, gantry 181°→179°  ·  </Run>
+                            <Run>Arc 2 — CW, collimator 330°, gantry 179°→181°  ·  </Run>
+                            <Run>Jaw 10×10 cm²  ·  600 MU/min  ·  Isocenter at PTV centre</Run>
+                        </TextBlock>
+                    </Border>
+
+                    <!-- Planning log -->
+                    <GroupBox Grid.Row="2"
+                              Header=" Planning Log "
+                              BorderBrush="DarkSlateGray" BorderThickness="1"
+                              Margin="0,6,0,0" Padding="4">
+                        <TextBox Text="{Binding AutoPlanLog, Mode=OneWay}"
+                                 IsReadOnly="True"
+                                 FontFamily="Consolas" FontSize="11"
+                                 TextWrapping="NoWrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 Background="#1E1E1E" Foreground="#D4D4D4"
+                                 BorderThickness="0"/>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
